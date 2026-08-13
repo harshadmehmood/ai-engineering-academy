@@ -1,0 +1,59 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{width:1280px;height:640px;overflow:hidden}
+  body{
+    background:linear-gradient(145deg,#0d1520 0%,#0b0f14 55%,#101a28 100%);
+    color:#e8eef6;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+    display:flex;flex-direction:column;justify-content:space-between;
+    padding:62px 70px;position:relative;
+  }
+  .glow{position:absolute;width:760px;height:760px;right:-260px;top:-320px;
+    background:radial-gradient(circle,rgba(90,200,250,.20) 0%,rgba(124,156,255,.09) 42%,transparent 68%);}
+  .glow2{position:absolute;width:520px;height:520px;left:-200px;bottom:-260px;
+    background:radial-gradient(circle,rgba(61,220,151,.11) 0%,transparent 66%);}
+  .top{display:flex;align-items:center;gap:14px;position:relative}
+  .mark{background:linear-gradient(135deg,#5ac8fa,#7c9cff);color:#04121b;font-weight:800;
+    border-radius:12px;padding:7px 15px;font-size:25px;letter-spacing:-.5px}
+  .brand{font-size:25px;font-weight:600;letter-spacing:-.3px}
+  .kicker{margin-left:auto;font-size:15px;letter-spacing:2.4px;color:#5ac8fa;font-weight:700}
+  h1{font-size:69px;line-height:1.04;letter-spacing:-2.2px;font-weight:750;position:relative}
+  h1 em{font-style:italic;background:linear-gradient(100deg,#5ac8fa,#7c9cff);
+    -webkit-background-clip:text;background-clip:text;color:transparent}
+  .sub{font-size:25px;color:#a7b6c9;margin-top:22px;max-width:1010px;line-height:1.46;position:relative}
+  .stats{display:flex;gap:16px;position:relative}
+  .stat{flex:1;background:rgba(24,34,47,.72);border:1px solid #2a3849;border-radius:15px;
+    padding:19px 22px}
+  .stat b{display:block;font-size:36px;letter-spacing:-1.3px;line-height:1}
+  .stat span{display:block;font-size:13.5px;color:#8296ad;text-transform:uppercase;
+    letter-spacing:1.5px;margin-top:9px;font-weight:600}
+  .foot{display:flex;align-items:center;gap:12px;font-size:18px;color:#71829a;
+    position:relative;font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+  .dot{width:6px;height:6px;border-radius:50%;background:#3ddc97;flex:none}
+</style></head>
+<body>
+  <div class="glow"></div><div class="glow2"></div>
+
+  <div class="top">
+    <span class="mark">AI</span>
+    <span class="brand">Systems Academy</span>
+    <span class="kicker">FREE · OFFLINE · OPEN SOURCE</span>
+  </div>
+
+  <div>
+    <h1>Learn AI engineering by<br><em>designing the system around the model.</em></h1>
+    <div class="sub">Context engineering, retrieval, agents, evaluation and production system design — for engineers who already ship software.</div>
+  </div>
+
+  <div class="stats">
+    <div class="stat"><b>46</b><span>Lessons</span></div>
+    <div class="stat"><b>14</b><span>App case studies</span></div>
+    <div class="stat"><b>16</b><span>Interactive labs</span></div>
+    <div class="stat"><b>104</b><span>Graded questions</span></div>
+    <div class="stat"><b>0</b><span>Dependencies</span></div>
+  </div>
+
+  <div class="foot"><span class="dot"></span>harshadmehmood.github.io/ai-engineering-academy</div>
+</body></html>
