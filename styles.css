@@ -445,8 +445,11 @@ details p:last-child{margin-bottom:0}
   background:none;border:none;color:var(--ink3);font-size:10.5px;cursor:pointer;
   display:flex;flex-direction:column;align-items:center;gap:2px;padding:5px 8px;border-radius:8px;flex:1;
 }
-.bottombar button span{font-size:17px;line-height:1}
 .bottombar button.active{color:var(--acc)}
+/* one grid, one stroke weight, currentColor — no emoji fallback */
+.nvi{width:21px;height:21px;display:block;fill:none;stroke:currentColor;
+  stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.bottombar button.active .nvi{stroke-width:1.85}
 
 .toast{
   position:fixed;bottom:84px;left:50%;transform:translateX(-50%);
