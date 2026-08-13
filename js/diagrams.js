@@ -506,6 +506,7 @@
     'sysdesign-layers': 'The seven layers to specify for any AI feature.',
     'embeddings-space': 'Embedding proximity is a useful signal, not a definition of relevance.',
     'streaming': 'Streaming changes perceived latency and your validation strategy.',
+    'hero': 'A context window assembled for a single model call.',
     'guardrails': 'Guardrails on both sides of the model call.'
   };
 

@@ -1,0 +1,29 @@
+name: verify
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Syntax-check every script
+        run: |
+          for f in js/*.js scripts/*.js; do
+            node --check "$f" || exit 1
+          done
+          echo "all scripts parse"
+
+      - name: Validate course content
+        run: node scripts/validate.js
+
+      - name: Render every route in headless Chrome
+        run: ./scripts/smoke.sh

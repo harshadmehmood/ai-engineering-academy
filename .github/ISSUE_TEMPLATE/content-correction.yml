@@ -1,0 +1,32 @@
+name: Content correction
+description: Something in a lesson or case study is wrong or misleading
+labels: ["correction"]
+body:
+  - type: input
+    id: where
+    attributes:
+      label: Where
+      description: Lesson or case id, e.g. ce-caching or case video-gen
+      placeholder: ce-caching
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: What is wrong
+      description: Quote the passage if you can.
+    validations:
+      required: true
+  - type: textarea
+    id: correction
+    attributes:
+      label: What it should say
+    validations:
+      required: true
+  - type: input
+    id: source
+    attributes:
+      label: Source
+      description: A link supporting the correction. Primary sources preferred.
+    validations:
+      required: false

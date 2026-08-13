@@ -1,0 +1,30 @@
+name: Case study proposal
+description: Suggest an application shape the course does not cover
+labels: ["case-study"]
+body:
+  - type: input
+    id: app
+    attributes:
+      label: The application
+      placeholder: "Agentic browser automation for QA"
+    validations:
+      required: true
+  - type: textarea
+    id: why
+    attributes:
+      label: What makes it interesting as an engineering problem
+      description: What constraint forces a design decision the existing 14 cases do not already show?
+    validations:
+      required: true
+  - type: textarea
+    id: failure
+    attributes:
+      label: A failure mode specific to it
+    validations:
+      required: false
+  - type: checkboxes
+    id: offer
+    attributes:
+      label: Would you like to write it?
+      options:
+        - label: I'd like to submit a PR for this

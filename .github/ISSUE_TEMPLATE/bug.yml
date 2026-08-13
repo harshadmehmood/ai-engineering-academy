@@ -1,0 +1,38 @@
+name: Bug
+description: Something in the site does not work
+labels: ["bug"]
+body:
+  - type: input
+    id: route
+    attributes:
+      label: Where
+      description: The URL hash, e.g. #labs/rag or #case/voice-agent
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What you expected
+    validations:
+      required: true
+  - type: input
+    id: browser
+    attributes:
+      label: Browser and OS
+      placeholder: "Safari 18 / macOS 15"
+    validations:
+      required: false
+  - type: textarea
+    id: console
+    attributes:
+      label: Console errors
+      description: Open developer tools and paste anything red.
+      render: shell
+    validations:
+      required: false

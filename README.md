@@ -1,131 +1,199 @@
+<div align="center">
+
 # AI Systems Academy
 
-An offline, self-contained static website for learning **AI engineering, context engineering and AI system design**.
+### Learn AI engineering by designing the system *around* the model.
 
-Open `index.html` directly in a browser. No server, no build step, no Node, no localhost, no API keys, no network access at any point.
+A free, offline course on **LLM application engineering, context engineering and production AI system design** — for engineers who already ship software and now need to ship AI.
+
+**[▶ Open the course](https://harshadmehmood.github.io/ai-engineering-academy/)**
+
+[![verify](https://github.com/harshadmehmood/ai-engineering-academy/actions/workflows/verify.yml/badge.svg)](https://github.com/harshadmehmood/ai-engineering-academy/actions/workflows/verify.yml)
+[![licence: MIT](https://img.shields.io/badge/licence-MIT-blue.svg)](LICENSE)
+[![no dependencies](https://img.shields.io/badge/dependencies-none-brightgreen.svg)](#why-it-has-no-build-step)
+[![PRs welcome](https://img.shields.io/badge/PRs-welcome-orange.svg)](CONTRIBUTING.md)
+
+**46 lessons · 14 application case studies · 16 interactive labs · 104 graded questions · 0 dependencies**
+
+<img src="docs/home.png" alt="The AI Systems Academy home page, showing the four pillars and a context-window diagram" width="820">
+
+</div>
 
 ---
 
-## What's in it
+## Why this exists
 
-| | Count | |
-|---|---|---|
-| **Lessons** | 46 across 7 modules | ~9 hours of reading, each with a diagram, worked example, pitfalls, a graded self-check and a hands-on lab |
-| **Case studies** | 14 complete applications | Architecture, request trace, context assembly, tool surface, failure modes, cost model, eval scorecard, graded decisions, failure simulations |
-| **Interactive labs** | 16 | Tokenizer, sampling, attention, embeddings, chunking, RAG pipeline, reranking, context budget, context rot, compaction, cache economics, cost model, agent loop, tool surface, injection sandbox, eval layers |
-| **Pattern catalog** | 23 named patterns | Each with problem → mechanism → cost → the failure mode you inherit |
-| **Decision workshop** | 30 graded judgement calls | Including why the plausible-but-wrong option is tempting |
-| **Reference** | 60 glossary terms, 10 cheat sheets, 14 formulas, 18 cited sources | |
-| **Diagrams** | 21 generated SVGs | Theme-aware, no image files |
+Most AI learning material teaches you to write a prompt. Almost none of it teaches you the part that actually decides whether your feature works in production: **what enters the context window, who holds authority over side effects, how you know when it is wrong, and what it costs at the 99th percentile.**
+
+This course is the missing part. Every lesson is written for someone who can already build software and needs to know where the model fits inside it.
+
+> An LLM is one stage in a pipeline you control. Everything else — memory, retrieval, tools, safety, cost — is software you write around it. Almost every failed AI feature fails at a boundary the team never drew.
+
+## What's inside
+
+<table>
+<tr><td width="50%" valign="top">
+
+### 📚 46 lessons · 7 modules
+Roughly 9 hours of reading. Each lesson has a diagram, a worked example, named pitfalls, a graded self-check where the wrong answers are genuinely tempting, and a lab you can run against code you already own.
+
+</td><td width="50%" valign="top">
+
+### 🧩 14 application case studies
+Not links to external reading — complete, self-contained design documents. Product contract, architecture, request trace, exact per-call context assembly, tool surface with authority levels, failure modes, cost model, eval scorecard.
+
+</td></tr>
+<tr><td width="50%" valign="top">
+
+### 🔬 16 interactive labs
+Offline simulations that make a trade-off *visible* instead of describing it: watch retrieval accuracy fall as you add distractors, watch a cache hit rate collapse when you put a timestamp in the wrong place.
+
+</td><td width="50%" valign="top">
+
+### 📖 Embedded reference library
+A 23-pattern context-engineering catalog, 60 glossary terms, 10 cheat sheets, 14 formulas and 18 cited primary sources — all local, so the whole thing works on a plane.
+
+</td></tr>
+</table>
 
 ### The seven modules
 
-1. **Foundations** — what an LLM does, tokens, context windows, sampling, embeddings, model routing
-2. **Prompting as Engineering** — prompt anatomy, trust levels, structured output, few-shot, versioning and regression testing
-3. **Context Engineering** — budgets, context rot, JIT retrieval, compaction, memory tiers, tool economy, sub-agent isolation, cache-stable prefixes
-4. **Retrieval & Knowledge Systems** — RAG stages, chunking, hybrid search + RRF, reranking, agentic search, retrieval evaluation
-5. **Tools & Agents** — tool design, the agent loop, workflow vs agent, MCP, multi-agent, error recovery, human-in-the-loop
-6. **Evaluation & Observability** — why vibes fail, eval datasets, LLM-as-judge calibration, tracing, CI gating
-7. **Production AI System Design** — a seven-layer design method, latency, cost, reliability, prompt injection, abuse, privacy, rollout
+| | Module | Covers |
+|---|---|---|
+| 1 | **Foundations** | What an LLM actually does · tokens · context windows · sampling · embeddings · model routing |
+| 2 | **Prompting as Engineering** | Prompt anatomy · trust levels · structured output · few-shot · versioning and regression testing |
+| 3 | **Context Engineering** | Budgets · context rot · JIT retrieval · compaction · memory tiers · tool economy · sub-agent isolation · cache-stable prefixes |
+| 4 | **Retrieval & Knowledge** | RAG stages · chunking · hybrid search + RRF · reranking · agentic search · retrieval evaluation |
+| 5 | **Tools & Agents** | Tool design · the agent loop · workflow vs agent · MCP · multi-agent · error recovery · human-in-the-loop |
+| 6 | **Evaluation & Observability** | Why vibes fail · eval datasets · LLM-as-judge calibration · tracing · CI gating |
+| 7 | **Production System Design** | A seven-layer design method · latency · cost · reliability · prompt injection · abuse · privacy · rollout |
 
 ### The 14 case studies
 
-| # | Case | Platform |
-|---|---|---|
-| 01 | macOS AI Developer Workspace | SwiftUI + AppKit |
-| 02 | macOS PDF Intelligence & Editor | PDFKit + SwiftUI |
-| 03 | iOS AI Personal Assistant | on-device / cloud hybrid |
-| 04 | Web Customer Support Copilot | Node/TS + React |
-| 05 | Web Operations & Finance Analyst | Postgres + text-to-SQL |
-| 06 | AI Video Generation Pipeline | queue + object storage |
-| 07 | Multi-Tenant AI Chatbot SaaS | Node/TS + Firebase |
-| 08 | CI Code Review Agent | GitHub Actions |
-| 09 | Enterprise Search & Knowledge Assistant | multi-source connectors |
-| 10 | Realtime Voice Support Agent | WebRTC + streaming STT/TTS |
-| 11 | Email Triage & Draft Agent | Gmail/Graph API |
-| 12 | Document Extraction Pipeline | batch + human review |
-| 13 | Design-to-Code (Screenshot → SwiftUI) | multimodal |
-| 14 | Multi-Agent Research System | orchestrator + workers |
+| # | Case study | Platform | The interesting constraint |
+|---|---|---|---|
+| 01 | macOS AI Developer Workspace | SwiftUI + AppKit | Picking 8k of a 900k-token repo |
+| 02 | macOS PDF Intelligence & Editor | PDFKit | Every claim must highlight a real span |
+| 03 | iOS AI Personal Assistant | on-device / cloud hybrid | Privacy as an architectural boundary |
+| 04 | Web Customer Support Copilot | Node/TS + React | Every input is attacker-controlled |
+| 05 | Web Operations & Finance Analyst | Postgres, text-to-SQL | A wrong number looks like a right one |
+| 06 | AI Video Generation Pipeline | queue + object storage | Dollars per job, minutes per render |
+| 07 | Multi-Tenant AI Chatbot SaaS | Node/TS + Firebase | Margin lives in the cache hit rate |
+| 08 | CI Code Review Agent | GitHub Actions | Three false positives and you're muted |
+| 09 | Enterprise Search & Knowledge | multi-source connectors | Permissions change faster than any index |
+| 10 | Realtime Voice Support Agent | WebRTC + STT/TTS | 800 ms, and no undo on speech |
+| 11 | Email Triage & Draft Agent | Gmail / Graph API | The send tool must not exist |
+| 12 | Document Extraction Pipeline | batch + human review | Knowing which extractions to trust |
+| 13 | Design-to-Code (Screenshot → SwiftUI) | multimodal | A compiler as a free verifier |
+| 14 | Multi-Agent Research System | orchestrator + workers | When 60:1 compression justifies 10× cost |
 
-Each case opens with nine tabs: Brief & contract, Architecture, Context, Tools, Failure modes, Simulator, Evals & cost, Decisions, Notes.
+Each opens with nine tabs: **Brief & contract · Architecture · Context · Tools · Failure modes · Simulator · Evals & cost · Decisions · Notes.**
 
----
+<div align="center">
+<img src="docs/case.png" alt="A case study page showing the product contract table and tabbed navigation" width="49%">
+<img src="docs/lab.png" alt="An interactive lab showing layer scores and the compounding problem" width="49%">
+<br>
+<img src="docs/context.png" alt="The context engineering hub with the pattern catalog" width="49%">
+<img src="docs/lesson-light.png" alt="A lesson in light theme showing a generated cache-prefix diagram" width="49%">
+</div>
 
-## Using it
+## Getting started
 
-- **Search everything** — press <kbd>/</kbd> or <kbd>⌘K</kbd> for the command palette across lessons, cases, labs, patterns and glossary terms.
-- **Next / previous lesson** — <kbd>j</kbd> / <kbd>k</kbd> or arrow keys while reading.
-- **Guided paths** — the home page has six entry points by problem ("my assistant degrades on long tasks", "it works but I cannot afford it") rather than by topic.
-- **Session planner** — pick 10/25/45/90 minutes and it selects unfinished lessons that fit.
-- **Progress** is stored in this browser's `localStorage` only. Nothing is uploaded. Use Export/Import on the Progress page to move it between machines.
-- **Theme** toggles light/dark; all diagrams re-colour automatically.
+**Just use it:** [harshadmehmood.github.io/ai-engineering-academy](https://harshadmehmood.github.io/ai-engineering-academy/)
 
----
+**Or run it locally** — clone and open the file. That is the entire setup.
 
-## Files
+```bash
+git clone https://github.com/harshadmehmood/ai-engineering-academy.git
+cd ai-engineering-academy
+open index.html          # macOS · or xdg-open, or drag it into a browser
+```
+
+No server. No `npm install`. No build step. Works offline, on a plane, behind a firewall.
+
+### Finding your way in
+
+The home page offers six entry points **by problem** rather than by topic, because that is how people actually arrive:
+
+- *I am new to LLM engineering*
+- *My assistant degrades on long tasks*
+- *My RAG answers are wrong*
+- *I am building an agent*
+- *It works but I cannot afford it*
+- *I need to make it safe to ship*
+
+| Shortcut | |
+|---|---|
+| <kbd>/</kbd> or <kbd>⌘K</kbd> | Search everything — lessons, cases, labs, patterns, glossary |
+| <kbd>j</kbd> / <kbd>k</kbd> | Next / previous lesson |
+| ◐ | Toggle light / dark — every diagram re-colours itself |
+
+Progress, bookmarks and quiz history are stored in your browser's `localStorage`. **Nothing is uploaded anywhere.** Export/Import on the Progress page moves it between machines.
+
+## Why it has no build step
+
+The constraint is deliberate and it is load-bearing:
+
+- **It still works in five years.** No dependency will rot, no framework will deprecate, no CDN will go down.
+- **You can read all of it.** Every line of logic is in ten plain JavaScript files you can open and understand.
+- **It works offline.** Genuinely — no network request is made at any point.
+- **Nothing tracks you.** No analytics, no cookies, no signup, no account.
+
+Node is used only for the dev scripts. The shipped site is HTML, CSS and ES5-compatible JavaScript.
 
 ```
 index.html                 shell + page containers
-styles.css                 full design system, light + dark
-manifest.json              PWA manifest
+styles.css                 design system, light + dark
 js/
-  diagrams.js              21 generated theme-aware SVG diagrams
-  data-curriculum-a.js     modules 1–3 (20 lessons)
-  data-curriculum-b.js     modules 4–5 (13 lessons)
-  data-curriculum-c.js     modules 6–7 (13 lessons)
+  diagrams.js              22 generated theme-aware SVG diagrams
+  data-curriculum-{a,b,c}.js   46 lessons across 7 modules
   data-patterns.js         23 context-engineering patterns
-  data-cases-a.js          case studies 01–07
-  data-cases-b.js          case studies 08–14
+  data-cases-{a,b}.js      14 application case studies
   data-reference.js        glossary, cheat sheets, formulas, sources, workshop
   labs.js                  16 interactive labs
   cases.js                 case renderer + 12 parametric simulators
   app.js                   router, markdown renderer, progress, page renderers
+scripts/
+  validate.js              content structure checks — runs in CI
+  smoke.sh                 renders all 84 routes in headless Chrome — runs in CI
 ```
 
-## Extending it
+## Quality checks
 
-**Add a case study** — append an object to `window.CASES_B` in `js/data-cases-b.js`. Required keys:
+Both run on every pull request, and you can run them locally:
 
-```js
-{
-  id, num, title, platform, tags: [],
-  brief,
-  spec:     [[label, value], ...],          // product contract table
-  pipeline: ['Stage', 'Stage', ...],        // renders as an SVG chain
-  trace:    [{ t, d, code? }, ...],         // numbered request walkthrough
-  context:  [{ name, tokens, note, color }, ...],   // color: acc|acc2|good|warn|bad|ink3
-  tools:    [{ sig, kind, note }, ...],     // kind: read|write|gated
-  failures: [{ t, d, mit }, ...],
-  cost:     { lines: [[k, v], ...], notes: [] },
-  evals:    [[metric, target, how], ...],
-  decisions:[{ q, options: [{ t, ok, why }, ...] }, ...],
-  sim:      { type, cfg },                  // see below
-  sims:     [{ label, out }, ...],          // scenario buttons, `out` is preformatted text
-  notes:    'markdown string'
-}
+```bash
+node scripts/validate.js   # 46 lessons, 14 cases, every diagram key, every quiz
+./scripts/smoke.sh         # renders all 84 routes, fails on unrendered markup
 ```
 
-`sim.type` is one of the 12 built-in simulators in `js/cases.js`: `budget`, `topk`, `cost`, `latency`, `escalation`, `quota`, `precision`, `acl`, `injection`, `threshold`, `refine`, `multiagent`. The navigation, search index, filters and prev/next links all pick it up automatically.
+`validate.js` catches the mistakes that are easy to make when adding content — a missing field, a diagram key that does not exist, a quiz with no correct answer, a simulator type that is not implemented. It has no dependencies and runs in under a second.
 
-**Add a lesson** — append to a module's `lessons` array in any `data-curriculum-*.js`. Bodies use a markdown subset: `##`/`###`, `**bold**`, `` `code` ``, fenced code blocks, `-`/`1.` lists, `>` quotes, `|` tables, plus two custom tokens on their own line:
+## Contributing
 
-```
-{{diagram:rag-pipeline}}
-{{callout:warn|Text of the callout.}}
-```
+Contributions are genuinely welcome — see **[CONTRIBUTING.md](CONTRIBUTING.md)**.
 
-Diagram keys come from `DIAGRAMS.keys()`. Callout types are `` (info), `good`, `warn`, `bad`.
+The most valuable thing you can add is **a new case study**: a real application shape the existing 14 do not cover, with its own failure modes and cost model. Adding one is appending a single object to `js/data-cases-b.js` — navigation, search, filters and prev/next pick it up automatically. The schema and the twelve reusable simulator types are documented in the contributing guide.
 
-**Add a lab** — push an object with `{ id, name, title, desc, html(), init() }` onto `window.LABS` in `js/labs.js`.
-
----
+Also very welcome: corrections with sources, new labs, and real production failure modes you have hit.
 
 ## Deliberate limitations
 
-- **No live AI.** Embedding an API key in a static site would expose it. The "Copy tutor prompt" button on each lesson generates a context-rich prompt for you to paste into Claude or another assistant instead.
-- **No cloud sync.** Progress lives in `localStorage`; use Export/Import to move it.
-- **Simulations are teaching models, not provider internals.** The tokenizer, attention map, sampling distribution and cost figures are simplified illustrations. Every one encodes a real engineering trade-off, but none reflects any specific model's implementation. Cost figures use illustrative placeholder rates — substitute your provider's current pricing.
+Stated plainly so nothing here misleads you:
+
+- **No live AI.** Embedding an API key in a static site would expose it. Instead, every lesson has a *Copy tutor prompt* button that generates a context-rich prompt to paste into Claude or another assistant.
+- **No cloud sync.** Progress lives in `localStorage`. Use Export/Import to move it.
+- **The simulations are teaching models, not provider internals.** The tokenizer, attention map and sampling distributions are simplified illustrations. Each encodes a real engineering trade-off; none reflects any specific model's implementation.
+- **Cost figures use illustrative placeholder rates.** They are labelled as such in the UI. Substitute your provider's current pricing before making a decision on them.
 
 ## Sources
 
-All lesson material is original prose. External sources are cited rather than copied — see the **Reference → Sources** tab for the 18 primary sources (Anthropic engineering posts and docs, the MCP specification, the OWASP LLM Top 10, Google and Hugging Face course material) with a note on what each one backs.
+All lesson prose is original. External material is cited rather than copied — the **Reference → Sources** tab lists 18 primary sources (Anthropic engineering posts and documentation, the Model Context Protocol specification, the OWASP LLM Top 10, Google and Hugging Face course material) with a note on which claims each one supports.
+
+## Licence
+
+[MIT](LICENSE) — use it, fork it, teach from it, ship it in your onboarding. Attribution appreciated, not required.
+
+<div align="center">
+<sub>If this is useful, a ⭐ helps other engineers find it.</sub>
+</div>
