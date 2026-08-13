@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AI Academy Library — offline course reader</title>
+<link rel="stylesheet" href="styles.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%233ddc97'/%3E%3Ctext x='32' y='45' font-family='-apple-system,Helvetica' font-size='32' font-weight='700' text-anchor='middle' fill='%2304121b'%3E%E2%97%88%3C/text%3E%3C/svg%3E">
+</head>
+<body>
+
+<header class="topbar">
+  <button id="menuBtn" class="icon" aria-label="Menu">☰</button>
+  <a class="brand" href="#home"><span class="mark">◈</span> AI Academy Library</a>
+  <span id="offlineTag" class="tag">offline</span>
+  <div class="spacer"></div>
+  <button id="searchBtn" class="icon" title="Search (/)">⌕</button>
+  <button id="themeBtn" class="icon" title="Theme">◐</button>
+</header>
+
+<aside id="drawer">
+  <div class="drawerHead"><b>Library</b><button id="drawerClose" class="icon">×</button></div>
+  <div class="filterBar">
+    <button class="chip active" data-nf="all">All</button>
+    <button class="chip" data-nf="lesson">Lessons</button>
+    <button class="chip" data-nf="notebook">Notebooks</button>
+    <button class="chip" data-nf="offline">Runs offline</button>
+    <button class="chip" data-nf="unread">Unread</button>
+  </div>
+  <nav id="nav"></nav>
+  <div class="drawerFoot">
+    <div id="ringWrap"></div>
+    <div><b id="progPct">0%</b><small id="progCount">0 read</small></div>
+  </div>
+</aside>
+<div id="scrim"></div>
+
+<main>
+  <!-- HOME -->
+  <section id="page-home" class="page">
+    <div class="hero">
+      <label>LOCAL COURSE LIBRARY</label>
+      <h1>Everything you cloned, in one reader.</h1>
+      <p id="heroSub"></p>
+      <div class="stats" id="heroStats"></div>
+    </div>
+
+    <div class="banner" id="serveBanner"></div>
+
+    <h2 class="sectionTitle">Courses</h2>
+    <div id="courseGrid" class="courseGrid"></div>
+
+    <h2 class="sectionTitle">Suggested path</h2>
+    <p class="lead">Built from the three modules most relevant to production work: evaluation, monitoring, and retrieval quality.</p>
+    <div id="pathList"></div>
+
+    <h2 class="sectionTitle">Offline readiness</h2>
+    <p class="lead">What each notebook needs beyond the files on this disk. Lessons are always readable.</p>
+    <div id="readiness"></div>
+
+    <h2 class="sectionTitle">Cached datasets</h2>
+    <div id="cacheList"></div>
+  </section>
+
+  <!-- COURSE -->
+  <section id="page-course" class="page hide">
+    <div class="readerTop"><button class="text" data-goto="#home">← Library</button><span id="courseMeta" class="meta"></span></div>
+    <div id="courseBody"></div>
+  </section>
+
+  <!-- READER -->
+  <section id="page-item" class="page hide">
+    <div class="readerTop">
+      <button class="text" id="backBtn">← Back</button>
+      <span id="itemMeta" class="meta"></span>
+      <button id="doneBtn" class="secondary">Mark read</button>
+    </div>
+    <div id="itemBadges" class="pillRow"></div>
+    <article id="itemBody" class="prose"></article>
+    <div class="prevnext">
+      <button id="prevBtn" class="secondary">← Previous</button>
+      <button id="nextBtn" class="primary">Next →</button>
+    </div>
+  </section>
+</main>
+
+<div id="palette" class="palette hide">
+  <div class="paletteBox">
+    <input id="paletteInput" placeholder="Search titles and headings across 217 files…" autocomplete="off">
+    <div id="paletteResults"></div>
+    <div class="paletteHint"><kbd>↑</kbd><kbd>↓</kbd> move · <kbd>↵</kbd> open · <kbd>esc</kbd> close</div>
+  </div>
+</div>
+
+<div id="toast" class="toast hide"></div>
+
+<script src="index-data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

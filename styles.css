@@ -184,6 +184,18 @@ button{font-family:var(--sans)}
 .modes button.active{background:var(--acc);color:#04121b;border-color:var(--acc)}
 :root[data-theme="light"] .modes button.active{color:#fff}
 
+/* companion toolkit */
+.toolkit{display:grid;grid-template-columns:1.35fr .95fr;gap:22px;align-items:start;margin-top:6px}
+.toolkit h3{margin:.1em 0 .5em;font-size:18px}
+.toolkit p{color:var(--ink2);font-size:14px;margin:0 0 .9em}
+.toolkit p.meta{font-size:13px;color:var(--ink3)}
+.toolkit code{font-family:var(--mono);font-size:.87em;background:var(--panel2);border:1px solid var(--line);border-radius:5px;padding:1px 5px}
+.tkSide pre{background:var(--bg2);border:1px solid var(--line);border-radius:var(--r2);
+  padding:13px;overflow-x:auto;font-family:var(--mono);font-size:12px;line-height:1.65;margin:0 0 10px}
+.tkSide pre code{background:none;border:none;padding:0}
+.tkBtn{display:inline-block;text-decoration:none;margin-top:4px}
+.tkBtn:hover{text-decoration:none}
+
 .pathGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
 .pathCard{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:16px;cursor:pointer;transition:.15s}
 .pathCard:hover{border-color:var(--acc)}
@@ -446,7 +458,7 @@ details p:last-child{margin-bottom:0}
 @media(max-width:860px){
   .hero{grid-template-columns:1fr}
   .heroArt{order:-1}
-  .quickLaunch,.patternList,.caseGrid,.glossGrid,.grid2,.grid3{grid-template-columns:1fr}
+  .quickLaunch,.patternList,.caseGrid,.glossGrid,.grid2,.grid3,.toolkit{grid-template-columns:1fr}
   .pathGrid{grid-template-columns:1fr}
   .stats{grid-template-columns:repeat(2,1fr)}
   h1{font-size:25px}

@@ -123,6 +123,30 @@
 
     <h2 class="sectionTitle">Where to start</h2>
     <div class="pathGrid" id="pathGrid"></div>
+
+    <h2 class="sectionTitle">Companion toolkit</h2>
+    <p class="lead">This course is deliberately opinionated and self-contained. When you want breadth — other people's courses, read side by side, still with no internet — there is a second tool in this repository.</p>
+    <div class="panel toolkit">
+      <div class="tkMain">
+        <label>OFFLINE COURSE LIBRARY</label>
+        <h3>Read every course you've cloned, in one place</h3>
+        <p>Point it at course repositories on your disk and it builds a searchable library: written lessons rendered inline, notebooks rendered with their stored outputs, and every notebook classified by <b>what it needs beyond the files on disk</b> — so you know before a flight which ones actually run.</p>
+        <p class="meta">It ships no course content. You clone the courses; it indexes titles, paths and structure only, then reads each file from its own repo at view time. Licences stay intact and <code>git pull</code> keeps it current.</p>
+        <div class="pillRow">
+          <span class="pill ok">runs offline</span>
+          <span class="pill">no dependencies</span>
+          <span class="pill">MIT</span>
+        </div>
+      </div>
+      <div class="tkSide">
+        <pre><code>cd tools
+git clone --depth 1 \
+  https://github.com/DataTalksClub/llm-zoomcamp.git
+./start.sh</code></pre>
+        <p class="meta">With three courses cloned: ~280 files, 170 lessons, 81 notebooks, 350k words.</p>
+        <a class="secondary tkBtn" href="https://github.com/harshadmehmood/ai-engineering-academy/tree/main/tools" target="_blank" rel="noopener">Setup guide →</a>
+      </div>
+    </div>
   </section>
 
   <!-- ================= LEARN (curriculum) ================= -->

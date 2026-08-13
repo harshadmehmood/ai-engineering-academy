@@ -5,3 +5,6 @@ _overflow.html
 _light.html
 node_modules/
 *.log
+
+# generated locally by tools/build-index.js — depends on which courses you cloned
+tools/library/index-data.js

@@ -465,23 +465,60 @@
   };
 
   D['hero'] = function () {
-    var b = '';
-    b += '<rect x="4" y="4" width="392" height="212" rx="16" fill="' + C.bg + '" stroke="' + C.line + '"/>';
-    b += text(20, 28, 'context assembled for one call', { fs: 10, mono: true, color: C.ink3 });
+    /* One assembled context, drawn to scale.
+       Section bars are proportional to each other; the meter at the
+       bottom shows the same total against the real window, which is
+       the point — 11k of 200k is a deliberate budget, not a full window. */
+    var W = 400, PAD = 16;
+    var LABEL_X = PAD, BAR_X = 116, BAR_W = 186, VAL_X = W - PAD;
     var rows = [
-      ['system rules', 62, C.acc], ['tool schemas', 48, C.acc2], ['memory', 40, C.good],
-      ['retrieved §4.2', 96, C.warn], ['recent turns', 74, C.ink3], ['user ask', 44, C.bad]
+      ['system rules', 1800, C.acc],
+      ['tool schemas', 1240, C.acc2],
+      ['memory', 820, C.good],
+      ['retrieved §4.2', 3100, C.warn],
+      ['recent turns', 3940, C.ink3],
+      ['user ask', 340, C.bad]
     ];
-    var y = 44;
+    var total = rows.reduce(function (n, r) { return n + r[1]; }, 0);   // 11,240
+    var LIMIT = 200000;
+    var max = Math.max.apply(null, rows.map(function (r) { return r[1]; }));
+    var H = 40 + rows.length * 21 + 72;
+
+    var b = '<rect x="3" y="3" width="' + (W - 6) + '" height="' + (H - 6) +
+      '" rx="16" fill="' + C.bg + '" stroke="' + C.line + '"/>';
+    b += text(PAD, 25, 'context assembled for one call', { fs: 10, mono: true, color: C.ink3 });
+
+    var y = 40;
     rows.forEach(function (r) {
-      b += band(20, y, r[1] * 2.6, 20, '', r[2]);
-      b += text(20 + r[1] * 2.6 + 8, y + 14, r[0], { fs: 9.5, mono: true, color: C.ink3 });
-      y += 25;
+      var w = Math.max(3, (r[1] / max) * BAR_W);
+      b += text(LABEL_X, y + 11, r[0], { fs: 9.5, mono: true, color: C.ink2 });
+      /* track shows the share each section could occupy, so short bars read as short */
+      b += '<rect x="' + BAR_X + '" y="' + (y + 2) + '" width="' + BAR_W +
+        '" height="12" rx="3" fill="' + C.panel + '"/>';
+      b += '<rect x="' + BAR_X + '" y="' + (y + 2) + '" width="' + w +
+        '" height="12" rx="3" fill="' + r[2] + '"/>';
+      b += text(VAL_X, y + 11, r[1].toLocaleString(), { fs: 9.5, mono: true, color: C.ink3, anchor: 'end' });
+      y += 21;
     });
-    b += '<line x1="20" y1="' + (y + 4) + '" x2="376" y2="' + (y + 4) + '" stroke="' + C.line + '"/>';
-    b += text(20, y + 22, 'budget 11,240 / 200,000', { fs: 10, mono: true, color: C.good });
-    b += text(376, y + 22, 'cache hit 92%', { fs: 10, mono: true, color: C.acc, anchor: 'end' });
-    return svg(400, 220, b);
+
+    y += 6;
+    b += '<line x1="' + PAD + '" y1="' + y + '" x2="' + (W - PAD) + '" y2="' + y + '" stroke="' + C.line + '"/>';
+    y += 17;
+    b += text(PAD, y, 'assembled', { fs: 9.5, mono: true, color: C.ink2 });
+    b += text(VAL_X, y, total.toLocaleString() + ' tokens', { fs: 9.5, mono: true, color: C.ink, anchor: 'end' });
+
+    /* the meter that makes the ratio honest */
+    y += 12;
+    var used = Math.max(2.5, (total / LIMIT) * (W - PAD * 2));
+    b += '<rect x="' + PAD + '" y="' + y + '" width="' + (W - PAD * 2) +
+      '" height="7" rx="3.5" fill="' + C.panel + '" stroke="' + C.line + '" stroke-width=".75"/>';
+    b += '<rect x="' + PAD + '" y="' + y + '" width="' + used + '" height="7" rx="3.5" fill="url(#grd)"/>';
+    y += 21;
+    var pctOfWindow = ((total / LIMIT) * 100).toFixed(1);
+    b += text(PAD, y, pctOfWindow + '% of a ' + (LIMIT / 1000) + 'k window',
+      { fs: 9.5, mono: true, color: C.good });
+    b += text(VAL_X, y, 'cache hit 92%', { fs: 9.5, mono: true, color: C.acc, anchor: 'end' });
+    return svg(W, H, b);
   };
 
   /* ---- public ---- */

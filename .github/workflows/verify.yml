@@ -17,8 +17,13 @@ jobs:
 
       - name: Syntax-check every script
         run: |
-          for f in js/*.js scripts/*.js; do
+          for f in js/*.js scripts/*.js tools/*.js tools/library/*.js; do
+            [ -e "$f" ] || continue
             node --check "$f" || exit 1
+          done
+          for f in scripts/*.sh tools/*.sh; do
+            [ -e "$f" ] || continue
+            bash -n "$f" || exit 1
           done
           echo "all scripts parse"
 

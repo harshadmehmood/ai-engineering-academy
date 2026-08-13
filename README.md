@@ -156,7 +156,35 @@ js/
 scripts/
   validate.js              content structure checks — runs in CI
   smoke.sh                 renders all 84 routes in headless Chrome — runs in CI
+tools/
+  start.sh                 companion offline course library — build, serve, open
+  build-index.js           scans cloned course repos into an index
+  library/                 the reader (html, css, js)
 ```
+
+## Companion toolkit — offline course library
+
+`tools/` holds a second, separate tool: a reader for course repositories you clone
+yourself. The academy is the course I wrote; this reads everyone else's.
+
+```bash
+cd tools
+git clone --depth 1 https://github.com/DataTalksClub/llm-zoomcamp.git
+git clone --depth 1 https://github.com/huggingface/agents-course.git
+git clone --depth 1 https://github.com/anthropics/courses.git anthropic-courses
+./start.sh
+```
+
+With those three you get roughly **280 files, 170 written lessons, 81 notebooks and
+350,000 words** in one searchable tree — written lessons rendered inline, notebooks
+rendered with their stored outputs, and every notebook classified by *what it needs
+beyond the files on disk* so you know before a flight which ones actually run.
+
+It ships **no course content**. The generated index holds titles, paths and
+structure only; the reader fetches each file from its own repo at view time, so the
+courses keep their own licences and `git pull` keeps the library current.
+
+Full setup and how to add a course: **[tools/README.md](tools/README.md)**.
 
 ## Quality checks
 
