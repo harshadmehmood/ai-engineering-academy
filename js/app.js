@@ -186,7 +186,7 @@
     var h = '<div class="navGroup"><b>Overview</b>' +
       ['#home|Home', '#learn|All lessons', '#context|Context engineering',
         '#cases|Case studies', '#labs|Interactive labs', '#workshop|Decision workshop',
-        '#reference|Reference library', '#progress|My progress'].map(function (x) {
+        '#reference|Reference library', '#library|Companion library', '#progress|My progress'].map(function (x) {
           var p = x.split('|');
           return '<a href="' + p[0] + '">' + p[1] + '</a>';
         }).join('') + '</div>';
@@ -281,70 +281,10 @@
     $('startSession').onclick = function () { planSession(); };
     $('continueBtn').onclick = function () { go('#lesson/' + next.id); };
     refreshStats();
-    findLocalLibrary();
+    var cc = $('ccGo');
+    if (cc) cc.textContent = (location.protocol === 'file:') ? 'How to run it →' : 'Open →';
   }
 
-  /* If the companion library is being served from the same origin, link
-     straight to it instead of sending people to GitHub. Layout differs
-     between a plain clone and a symlinked course folder, so probe both. */
-  function findLocalLibrary() {
-    var side0 = document.querySelector('.tkSide');
-    if (location.protocol === 'file:') {
-      // A file:// page cannot probe for siblings, but it can still link out.
-      // Say plainly that the connected copy lives behind the local server.
-      if (side0 && !side0.dataset.filehint) {
-        side0.dataset.filehint = '1';
-        var p = document.createElement('p');
-        p.className = 'meta';
-        p.style.marginTop = '10px';
-        p.innerHTML = 'Opened from disk, so this copy is standalone. Run <code>./start.sh</code> ' +
-          'in your courses folder and open <code>localhost:8777/academy/</code> instead — ' +
-          'that copy links straight through to the library.';
-        side0.appendChild(p);
-      }
-      return;
-    }
-    var side = document.querySelector('.tkSide');
-    if (!side || side.dataset.probed) return;
-    side.dataset.probed = '1';
-    /* Probe for the generated index, not just the page: several copies of the
-       reader can be reachable, and only the one with an index actually works.
-       Falls back to a bare reader (which shows its own setup page) if none has. */
-    var candidates = ['../library/', 'tools/library/', 'library/'];
-    (function probe(i, fallback) {
-      if (i >= candidates.length) {
-        if (fallback) return link(fallback, false);
-        return;
-      }
-      var base = candidates[i];
-      fetch(base.replace(/library\/$/, 'library-index.js'))
-        .then(function (r) {
-          if (!r.ok) throw new Error('no index');
-          link(base, true);
-        })
-        .catch(function () {
-          fetch(base + 'index.html')
-            .then(function (r) { probe(i + 1, fallback || (r.ok ? base : null)); })
-            .catch(function () { probe(i + 1, fallback); });
-        });
-    })(0, null);
-
-    function link(href, ready) {
-      var a = document.createElement('a');
-      a.className = (ready ? 'primary' : 'secondary') + ' tkBtn';
-      a.href = href;
-      a.textContent = ready ? 'Open the library →' : 'Library (needs setup) →';
-      a.style.marginRight = '8px';
-      side.insertBefore(a, side.querySelector('.tkBtn'));
-      var note = document.createElement('p');
-      note.className = 'meta';
-      note.style.marginTop = '10px';
-      note.textContent = ready
-        ? 'Running locally — the library is served alongside this page.'
-        : 'A library is reachable but has no index yet. Run ./setup.sh in its folder.';
-      side.appendChild(note);
-    }
-  }
 
   function planSession() {
     var budget = S.mode, picked = [], used = 0;
@@ -741,6 +681,91 @@
     $('refBody').innerHTML = h;
   }
 
+  /* ---------------- companion library ---------------- */
+  function renderLibrary() {
+    var P = global.STUDY_PATH;
+    var h = '';
+
+    h += '<div class="panel" style="margin-bottom:18px">' +
+      '<b>How it fits together.</b> Read a module here, then work its stage in the library — ' +
+      'the external material is practice, not introduction. Progress is tracked separately in each; ' +
+      'they are two tools that link to each other, not one app.</div>';
+
+    h += '<h2 class="sectionTitle">Run it</h2>' +
+      '<pre class="setupBlock"><code>git clone https://github.com/harshadmehmood/ai-engineering-academy.git\n' +
+      'cd ai-engineering-academy/tools\n\n' +
+      './setup.sh   # clones three courses, builds the index (~230 MB)\n' +
+      './start.sh   # serves both locally and opens them connected</code></pre>' +
+      '<p class="lead" id="libStatus"></p>';
+
+    if (!P) {
+      h += '<div class="callout warn"><b>Study path not loaded.</b> ' +
+        '<code>tools/curriculum.js</code> could not be read from this copy, so the stage ' +
+        'breakdown below is unavailable. Everything else on this page still applies.</div>';
+      $('libraryBody').innerHTML = h;
+      probeLibrary();
+      return;
+    }
+
+    var totalItems = P.stages.reduce(function (n, st) { return n + st.items.length; }, 0);
+    h += '<h2 class="sectionTitle">The seven stages</h2>' +
+      '<p class="lead">' + totalItems + ' external lessons and notebooks, one stage per module above. ' +
+      'Each carries a note on why it is there.</p>';
+
+    h += '<div class="stageList">' + P.stages.map(function (st) {
+      var mod = MODULES[st.n - 1];
+      var flag = st.priority ? '<span class="pill ok">highest value</span>'
+        : st.sparse ? '<span class="pill warn">thin — the academy carries this</span>' : '';
+      return '<div class="libStage">' +
+        '<span class="libN">' + st.n + '</span>' +
+        '<div class="libMain">' +
+        '<b>' + esc(mod ? mod.title : st.academy) + '</b> ' + flag +
+        '<small>' + esc(st.goal) + '</small>' +
+        '<span class="libCount">' + st.items.length + ' external item' +
+        (st.items.length === 1 ? '' : 's') + '</span></div>' +
+        '<a class="libGo" href="' + esc(st.academyHash) + '">Module ' + st.n + ' →</a>' +
+        '</div>';
+    }).join('') + '</div>';
+
+    h += '<h2 class="sectionTitle">What it does not do</h2>' +
+      '<ul class="lead"><li>It ships no course content — you clone the courses; it indexes titles and paths only.</li>' +
+      '<li>It cannot run on this hosted site: it reads files from your own disk.</li>' +
+      '<li>Notebooks needing a cloud API key are readable offline, not runnable. It labels which is which.</li></ul>';
+
+    $('libraryBody').innerHTML = h;
+    $$('#libraryBody .libGo').forEach(function (a) {
+      a.onclick = function (e) { e.preventDefault(); go(a.getAttribute('href')); };
+    });
+    probeLibrary();
+  }
+
+  /* Tell the reader whether a working library is actually reachable from here. */
+  function probeLibrary() {
+    var el = $('libStatus');
+    if (!el) return;
+    if (location.protocol === 'file:') {
+      el.innerHTML = 'You are reading this from disk, so the library cannot be reached — ' +
+        'a <code>file://</code> page cannot load one served over HTTP. Run <code>./start.sh</code> ' +
+        'and open <code>localhost:8777/academy/</code> for a copy that links straight through.';
+      return;
+    }
+    el.textContent = 'Checking for a library on this server…';
+    var cands = ['../library/', 'tools/library/', 'library/'];
+    (function probe(i) {
+      if (i >= cands.length) {
+        el.innerHTML = 'No library found on this server. Follow the steps above to set one up.';
+        return;
+      }
+      fetch(cands[i].replace(/library\/$/, 'library-index.js'))
+        .then(function (r) {
+          if (!r.ok) throw new Error('no index');
+          el.innerHTML = '<a class="primary tkBtn" href="' + cands[i] + '">Open the library →</a>' +
+            '<span class="meta" style="margin-left:12px">Running locally and indexed.</span>';
+        })
+        .catch(function () { probe(i + 1); });
+    })(0);
+  }
+
   /* ---------------- progress ---------------- */
   function renderProgress() {
     var d = doneCount(), pct = Math.round((d / LESSONS.length) * 100);
@@ -880,7 +905,7 @@
   }
 
   /* ---------------- router ---------------- */
-  var PAGES = ['home', 'learn', 'lesson', 'context', 'cases', 'case', 'labs', 'workshop', 'reference', 'progress'];
+  var PAGES = ['home', 'learn', 'lesson', 'context', 'cases', 'case', 'labs', 'workshop', 'reference', 'library', 'progress'];
   function show(page) {
     PAGES.forEach(function (p) {
       var el = $('page-' + p);
@@ -907,6 +932,7 @@
       case 'labs': show('labs'); renderLabs(arg); break;
       case 'workshop': show('workshop'); renderWorkshop(); break;
       case 'reference': show('reference'); renderReference(); break;
+      case 'library': show('library'); renderLibrary(); break;
       case 'progress': show('progress'); renderProgress(); break;
       default: show('home'); renderHome();
     }
