@@ -749,7 +749,8 @@
        too, where fetch does not. */
     if (global.LIBRARY && global.LIBRARY.totals) {
       var t = global.LIBRARY.totals;
-      el.innerHTML = '<a class="primary tkBtn" href="../library/">Open the library →</a>' +
+      el.innerHTML = '<a class="primary tkBtn" href="' + (global.__LIBBASE || '../library/') +
+        '">Open the library →</a>' +
         '<span class="meta" style="margin-left:12px">Built and ready — ' + t.files +
         ' files, ' + t.lessons + ' lessons, ' + t.notebooks + ' notebooks.</span>';
       return;

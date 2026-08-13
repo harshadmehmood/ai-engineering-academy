@@ -313,8 +313,11 @@
      loads when index.html is opened straight from disk. -->
 <script src="tools/curriculum.js" onerror="window.__noCurriculum=1"></script>
 <!-- Probe for a built library. A script tag is the only detection that works
-     from file://, where fetch is blocked. Absent = no library, which is fine. -->
-<script src="../library-index.js" onerror="window.__noLib=1"></script>
+     from file://, where fetch is blocked. Two layouts: a courses folder with the
+     academy symlinked beside the library, and a plain repo clone with it under
+     tools/. Absent = no library, which is fine. -->
+<script src="../library-index.js" onload="window.__LIBBASE='../library/'" onerror=""></script>
+<script src="tools/library-index.js" onload="window.__LIBBASE=window.__LIBBASE||'tools/library/'" onerror=""></script>
 <script src="js/app.js"></script>
 </body>
 </html>
