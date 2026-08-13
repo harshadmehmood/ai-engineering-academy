@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0b0f14">
+<title>AI Systems Academy — Context Engineering & AI System Design</title>
+<meta name="description" content="An offline, self-contained curriculum on LLM application engineering, context engineering, and production AI system design.">
+<link rel="stylesheet" href="styles.css">
+<link rel="manifest" href="manifest.json">
+</head>
+<body>
+
+<header class="topbar">
+  <button id="menuBtn" class="icon" aria-label="Menu">☰</button>
+  <a class="brand" href="#home"><span class="mark">AI</span> Systems Academy</a>
+  <div class="topSpacer"></div>
+  <button id="cmdBtn" class="icon" title="Search (press /)" aria-label="Search">⌕</button>
+  <button id="themeBtn" class="icon" title="Toggle theme" aria-label="Toggle theme">◐</button>
+</header>
+
+<aside id="drawer" aria-label="Navigation">
+  <div class="drawerHead">
+    <b>Curriculum</b>
+    <button id="drawerClose" class="icon" aria-label="Close">×</button>
+  </div>
+  <nav id="nav"></nav>
+  <div class="drawerFoot">
+    <div class="ring" id="ringWrap"></div>
+    <div>
+      <b id="drawerPct">0%</b>
+      <small id="drawerDone">0 of 0 lessons</small>
+    </div>
+  </div>
+</aside>
+<div id="scrim"></div>
+
+<main id="main">
+
+  <!-- ================= HOME ================= -->
+  <section id="page-home" class="page">
+    <div class="hero">
+      <div class="heroText">
+        <label>OFFLINE · SELF-CONTAINED · NO SERVER</label>
+        <h1>Learn AI engineering by <i>designing the system around the model</i>.</h1>
+        <p>Forty-six lessons, fourteen full application case studies, sixteen interactive labs and a cited reference library — all embedded in this folder. Built for engineers who already ship software and now need to ship AI.</p>
+        <div class="heroBtns">
+          <button id="continueBtn" class="primary">Continue learning →</button>
+          <button class="secondary" data-goto="#cases">Browse case studies</button>
+        </div>
+      </div>
+      <div class="heroArt" id="heroArt"></div>
+    </div>
+
+    <div class="stats">
+      <div><b id="statPct">0%</b><small>Progress</small></div>
+      <div><b id="statDone">0/46</b><small>Lessons</small></div>
+      <div><b id="statMins">0m</b><small>Studied</small></div>
+      <div><b id="statStreak">0</b><small>Day streak</small></div>
+    </div>
+
+    <h2 class="sectionTitle">The four pillars</h2>
+    <div class="quickLaunch">
+      <button data-goto="#learn">
+        <span class="ql-ico">◍</span>
+        <strong>Foundations &amp; Prompting</strong>
+        <small>Tokens, context windows, sampling, embeddings, structured output, prompt regression testing.</small>
+        <em id="qlLearn">11 lessons</em>
+      </button>
+      <button data-goto="#context">
+        <span class="ql-ico">◌</span>
+        <strong>Context Engineering</strong>
+        <small>Budgets, context rot, JIT retrieval, compaction, memory tiers, tool economy, cache-stable prefixes.</small>
+        <em id="qlContext">9 lessons + pattern catalog</em>
+      </button>
+      <button data-goto="#cases">
+        <span class="ql-ico">⌘</span>
+        <strong>AI System Design</strong>
+        <small>14 complete applications: architecture, data flow, failure modes, cost model, evals, security.</small>
+        <em id="qlCases">14 case studies</em>
+      </button>
+      <button data-goto="#labs">
+        <span class="ql-ico">⚙</span>
+        <strong>Interactive Labs</strong>
+        <small>Tokenizer, attention, chunking, reranking, context budget, cache economics, injection sandbox.</small>
+        <em id="qlLabs">16 labs</em>
+      </button>
+    </div>
+
+    <section class="commute panel">
+      <div>
+        <label>NEXT UP</label>
+        <h2 id="nextTitle">—</h2>
+        <p id="nextDesc">—</p>
+      </div>
+      <div class="modes" id="modeBtns">
+        <button data-mode="10" class="active">10m</button>
+        <button data-mode="25">25m</button>
+        <button data-mode="45">45m</button>
+        <button data-mode="90">90m</button>
+      </div>
+      <button id="startSession" class="primary">Start session</button>
+    </section>
+
+    <h2 class="sectionTitle">Where to start</h2>
+    <div class="pathGrid" id="pathGrid"></div>
+  </section>
+
+  <!-- ================= LEARN (curriculum) ================= -->
+  <section id="page-learn" class="page hide">
+    <div class="pageHead">
+      <div><label>CURRICULUM</label><h1>46 lessons, 7 modules</h1>
+      <p class="lead">Each lesson is a short read plus a diagram, worked example, pitfalls, self-check questions and a hands-on lab you can do against code you already own.</p></div>
+      <input id="curriculumSearch" class="search" placeholder="Search lessons, concepts, code…">
+    </div>
+    <div class="filterRow" id="levelFilter">
+      <button class="chip active" data-level="all">All</button>
+      <button class="chip" data-level="core">Core</button>
+      <button class="chip" data-level="applied">Applied</button>
+      <button class="chip" data-level="advanced">Advanced</button>
+      <button class="chip" data-level="unread">Not yet read</button>
+    </div>
+    <div id="modules"></div>
+  </section>
+
+  <!-- ================= LESSON READER ================= -->
+  <section id="page-lesson" class="page hide">
+    <div class="readerTop">
+      <button class="text" data-goto="#learn">← Curriculum</button>
+      <span id="lessonMeta" class="meta"></span>
+      <button id="bookmarkBtn" class="icon" title="Bookmark">☆</button>
+    </div>
+    <article id="lessonBody" class="prose"></article>
+    <div id="lessonExtras"></div>
+    <div class="readerActions">
+      <button id="speakBtn" class="secondary">🔊 Read aloud</button>
+      <button id="tutorBtn" class="secondary">Copy tutor prompt</button>
+      <button id="completeBtn" class="primary">Mark complete</button>
+    </div>
+    <div class="prevnext">
+      <button id="prevBtn" class="secondary">← Previous</button>
+      <button id="nextBtn" class="primary">Next →</button>
+    </div>
+  </section>
+
+  <!-- ================= CONTEXT ENGINEERING HUB ================= -->
+  <section id="page-context" class="page hide">
+    <div class="pageHead">
+      <div><label>PILLAR 02</label><h1>Context Engineering</h1>
+      <p class="lead">Prompt engineering asks "what words do I write?" Context engineering asks "what is the smallest set of high-signal tokens that makes the desired behaviour most likely — and how does my system keep that true over a long-running task?"</p></div>
+    </div>
+    <div class="ceIntro" id="ceIntro"></div>
+    <h2 class="sectionTitle">Interactive: context budget allocator</h2>
+    <div id="ceBudget" class="simCard"></div>
+    <h2 class="sectionTitle">Pattern catalog</h2>
+    <p class="lead">Twenty-two named, reusable context-engineering patterns. Each states the problem, the mechanism, the cost, and the failure mode you inherit when you adopt it.</p>
+    <div class="filterRow" id="patternFilter"></div>
+    <div id="patternList" class="patternList"></div>
+    <h2 class="sectionTitle">Lessons in this pillar</h2>
+    <div id="ceLessons"></div>
+  </section>
+
+  <!-- ================= CASE STUDIES ================= -->
+  <section id="page-cases" class="page hide">
+    <div class="pageHead">
+      <div><label>PILLAR 03 · OFFLINE SYSTEM DESIGN LAB</label><h1>14 real application case studies</h1>
+      <p class="lead">These are not links to external reading. Each case is a complete, self-contained design document: product brief, architecture diagram, request trace, the exact context assembled per call, tool boundaries, cost model, failure simulations, evaluation suite, and interactive design decisions with graded feedback.</p></div>
+      <input id="caseSearch" class="search" placeholder="Search case studies…">
+    </div>
+    <div class="filterRow" id="caseFilter"></div>
+    <div id="caseGrid" class="caseGrid"></div>
+  </section>
+
+  <section id="page-case" class="page hide">
+    <div class="readerTop">
+      <button class="text" data-goto="#cases">← All case studies</button>
+      <span id="caseMeta" class="meta"></span>
+      <button id="caseBookmark" class="icon" title="Bookmark">☆</button>
+    </div>
+    <div id="caseBody"></div>
+    <div class="prevnext">
+      <button id="casePrev" class="secondary">← Previous case</button>
+      <button id="caseNext" class="primary">Next case →</button>
+    </div>
+  </section>
+
+  <!-- ================= LABS ================= -->
+  <section id="page-labs" class="page hide">
+    <div class="pageHead">
+      <div><label>PILLAR 04</label><h1>Interactive labs</h1>
+      <p class="lead">Sixteen offline simulations. They are deliberately simplified teaching models — not provider internals — but every one encodes a real engineering trade-off you will meet in production.</p></div>
+    </div>
+    <div class="labTabs" id="labTabs"></div>
+    <div id="labStage"></div>
+  </section>
+
+  <!-- ================= WORKSHOP ================= -->
+  <section id="page-workshop" class="page hide">
+    <div class="pageHead">
+      <div><label>PRACTICE</label><h1>Decision workshop</h1>
+      <p class="lead">Thirty graded engineering decisions. Pick an answer and get the reasoning — including why the plausible-but-wrong option is tempting.</p></div>
+    </div>
+    <div class="filterRow" id="workshopFilter"></div>
+    <div id="workshopList"></div>
+    <div id="workshopScore" class="panel scoreCard"></div>
+  </section>
+
+  <!-- ================= REFERENCE ================= -->
+  <section id="page-reference" class="page hide">
+    <div class="pageHead">
+      <div><label>KNOWLEDGE BASE</label><h1>Reference library</h1>
+      <p class="lead">Glossary, cheat sheets, formulas and a cited source list. Everything needed to use this site is embedded locally; the source list tells you where each idea originates so you can verify it.</p></div>
+      <input id="refSearch" class="search" placeholder="Search glossary and references…">
+    </div>
+    <div class="refTabs">
+      <button class="chip active" data-ref="glossary">Glossary</button>
+      <button class="chip" data-ref="cheatsheets">Cheat sheets</button>
+      <button class="chip" data-ref="formulas">Formulas</button>
+      <button class="chip" data-ref="sources">Sources</button>
+    </div>
+    <div id="refBody"></div>
+  </section>
+
+  <!-- ================= PROGRESS ================= -->
+  <section id="page-progress" class="page hide">
+    <div class="pageHead"><div><label>YOUR DATA</label><h1>Progress, bookmarks &amp; review</h1></div></div>
+    <div id="progressBody"></div>
+  </section>
+
+</main>
+
+<nav class="bottombar" id="bottombar">
+  <button data-goto="#home"><span>⌂</span>Home</button>
+  <button data-goto="#learn"><span>◍</span>Learn</button>
+  <button data-goto="#context"><span>◌</span>Context</button>
+  <button data-goto="#cases"><span>⌘</span>Systems</button>
+  <button data-goto="#labs"><span>⚙</span>Labs</button>
+  <button data-goto="#reference"><span>❋</span>Ref</button>
+</nav>
+
+<div id="palette" class="palette hide">
+  <div class="paletteBox">
+    <input id="paletteInput" placeholder="Search everything — lessons, cases, patterns, glossary…" autocomplete="off">
+    <div id="paletteResults"></div>
+    <div class="paletteHint"><kbd>↑</kbd><kbd>↓</kbd> navigate · <kbd>↵</kbd> open · <kbd>esc</kbd> close</div>
+  </div>
+</div>
+
+<div id="toast" class="toast hide"></div>
+
+<script src="js/diagrams.js"></script>
+<script src="js/data-curriculum-a.js"></script>
+<script src="js/data-curriculum-b.js"></script>
+<script src="js/data-curriculum-c.js"></script>
+<script src="js/data-patterns.js"></script>
+<script src="js/data-cases-a.js"></script>
+<script src="js/data-cases-b.js"></script>
+<script src="js/data-reference.js"></script>
+<script src="js/labs.js"></script>
+<script src="js/cases.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

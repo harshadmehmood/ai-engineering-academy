@@ -1,0 +1,10 @@
+{
+  "name": "AI Systems Academy",
+  "short_name": "AI Academy",
+  "description": "Offline curriculum on LLM application engineering, context engineering and production AI system design.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#0b0f14",
+  "theme_color": "#0b0f14",
+  "icons": []
+}

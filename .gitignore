@@ -1,0 +1,7 @@
+.DS_Store
+Thumbs.db
+_selftest.html
+_overflow.html
+_light.html
+node_modules/
+*.log
