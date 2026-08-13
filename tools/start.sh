@@ -75,5 +75,7 @@ for _ in $(seq 1 40); do
   sleep 0.25
 done
 
-if command -v open >/dev/null 2>&1; then open "$URL"; fi
+OPEN_URL="$URL"
+[ -n "$ACADEMY_URL" ] && [ "${ACADEMY_URL#http}" != "$ACADEMY_URL" ] && OPEN_URL="$ACADEMY_URL"
+if command -v open >/dev/null 2>&1; then open "$OPEN_URL"; fi
 wait $SERVER_PID

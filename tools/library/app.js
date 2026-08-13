@@ -191,7 +191,10 @@
   /* ---- fetch with a helpful failure ---- */
   var SERVED = location.protocol !== 'file:';
   function load(relPath) {
-    return fetch('../' + relPath).then(function (r) {
+    // Paths legitimately contain spaces ("Anthropic 1P/"), which a raw fetch
+    // will not resolve. Encode each segment, not the separators.
+    var url = '../' + relPath.split('/').map(encodeURIComponent).join('/');
+    return fetch(url).then(function (r) {
       if (!r.ok) throw new Error('HTTP ' + r.status);
       return r.text();
     });
@@ -553,6 +556,8 @@
     var slash = h.indexOf('/');
     var page = slash < 0 ? h : h.slice(0, slash);
     var arg = slash < 0 ? '' : h.slice(slash + 1);
+    // location.hash comes back percent-encoded; index keys are literal.
+    try { arg = decodeURIComponent(arg); } catch (e) { /* leave as-is */ }
     if (page === 'path') { show('path'); renderPath(); }
     else if (page === 'course') { show('course'); renderCourse(arg); }
     else if (page === 'item') { show('item'); renderItem(arg); }

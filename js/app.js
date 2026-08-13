@@ -288,7 +288,22 @@
      straight to it instead of sending people to GitHub. Layout differs
      between a plain clone and a symlinked course folder, so probe both. */
   function findLocalLibrary() {
-    if (location.protocol === 'file:') return;         // can't fetch siblings
+    var side0 = document.querySelector('.tkSide');
+    if (location.protocol === 'file:') {
+      // A file:// page cannot probe for siblings, but it can still link out.
+      // Say plainly that the connected copy lives behind the local server.
+      if (side0 && !side0.dataset.filehint) {
+        side0.dataset.filehint = '1';
+        var p = document.createElement('p');
+        p.className = 'meta';
+        p.style.marginTop = '10px';
+        p.innerHTML = 'Opened from disk, so this copy is standalone. Run <code>./start.sh</code> ' +
+          'in your courses folder and open <code>localhost:8777/academy/</code> instead — ' +
+          'that copy links straight through to the library.';
+        side0.appendChild(p);
+      }
+      return;
+    }
     var side = document.querySelector('.tkSide');
     if (!side || side.dataset.probed) return;
     side.dataset.probed = '1';
