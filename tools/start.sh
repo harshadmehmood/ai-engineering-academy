@@ -42,9 +42,24 @@ if lsof -ti tcp:"$PORT" >/dev/null 2>&1; then
 fi
 
 URL="http://localhost:$PORT/library/"
+
+# If the academy is reachable from this root, the two link to each other.
+ACADEMY_URL=""
+for cand in academy .. ; do
+  if [ -f "$cand/index.html" ] && grep -q "AI Systems Academy" "$cand/index.html" 2>/dev/null; then
+    [ "$cand" = ".." ] && ACADEMY_URL="(serve the repo root to reach the academy)" \
+                      || ACADEMY_URL="http://localhost:$PORT/$cand/"
+    break
+  fi
+done
+
 echo "AI Academy Library"
 echo "  serving  $(pwd)"
-echo "  at       $URL"
+echo "  library  $URL"
+if [ -n "$ACADEMY_URL" ]; then
+  echo "  academy  $ACADEMY_URL"
+  echo "           both are on one origin, so they link to each other"
+fi
 echo "  offline  no internet is used"
 echo ""
 echo "Press Ctrl-C to stop."

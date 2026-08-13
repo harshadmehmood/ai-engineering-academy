@@ -281,6 +281,54 @@
     $('startSession').onclick = function () { planSession(); };
     $('continueBtn').onclick = function () { go('#lesson/' + next.id); };
     refreshStats();
+    findLocalLibrary();
+  }
+
+  /* If the companion library is being served from the same origin, link
+     straight to it instead of sending people to GitHub. Layout differs
+     between a plain clone and a symlinked course folder, so probe both. */
+  function findLocalLibrary() {
+    if (location.protocol === 'file:') return;         // can't fetch siblings
+    var side = document.querySelector('.tkSide');
+    if (!side || side.dataset.probed) return;
+    side.dataset.probed = '1';
+    /* Probe for the generated index, not just the page: several copies of the
+       reader can be reachable, and only the one with an index actually works.
+       Falls back to a bare reader (which shows its own setup page) if none has. */
+    var candidates = ['../library/', 'tools/library/', 'library/'];
+    (function probe(i, fallback) {
+      if (i >= candidates.length) {
+        if (fallback) return link(fallback, false);
+        return;
+      }
+      var base = candidates[i];
+      fetch(base.replace(/library\/$/, 'library-index.js'))
+        .then(function (r) {
+          if (!r.ok) throw new Error('no index');
+          link(base, true);
+        })
+        .catch(function () {
+          fetch(base + 'index.html')
+            .then(function (r) { probe(i + 1, fallback || (r.ok ? base : null)); })
+            .catch(function () { probe(i + 1, fallback); });
+        });
+    })(0, null);
+
+    function link(href, ready) {
+      var a = document.createElement('a');
+      a.className = (ready ? 'primary' : 'secondary') + ' tkBtn';
+      a.href = href;
+      a.textContent = ready ? 'Open the library →' : 'Library (needs setup) →';
+      a.style.marginRight = '8px';
+      side.insertBefore(a, side.querySelector('.tkBtn'));
+      var note = document.createElement('p');
+      note.className = 'meta';
+      note.style.marginTop = '10px';
+      note.textContent = ready
+        ? 'Running locally — the library is served alongside this page.'
+        : 'A library is reachable but has no index yet. Run ./setup.sh in its folder.';
+      side.appendChild(note);
+    }
   }
 
   function planSession() {

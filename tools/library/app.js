@@ -423,9 +423,36 @@
   }
 
 
+  /* ---- locate the academy ----
+     Prefer a copy served from this origin; fall back to the public site.
+     Layout differs between a plain clone (repo root above tools/) and a
+     symlinked course folder (academy/ beside library/), so probe both. */
+  var ACADEMY = null;
+  function findAcademy(done) {
+    if (ACADEMY !== null) return done(ACADEMY);
+    if (location.protocol === 'file:') { ACADEMY = ''; return done(''); }
+    var cands = ['../academy/', '../../', '../'];
+    (function probe(i) {
+      if (i >= cands.length) { ACADEMY = ''; return done(''); }
+      fetch(cands[i] + 'index.html')
+        .then(function (r) { return r.ok ? r.text() : Promise.reject(); })
+        .then(function (t) {
+          // make sure it is the academy and not some other index.html
+          if (t.indexOf('AI Systems Academy') < 0) return Promise.reject();
+          ACADEMY = cands[i]; done(ACADEMY);
+        })
+        .catch(function () { probe(i + 1); });
+    })(0);
+  }
+
   /* ---- companion study path ---- */
   function renderPath() {
+    findAcademy(function () { drawPath(); });
+  }
+  function drawPath() {
     var P = window.STUDY_PATH;
+    var base = ACADEMY || P.academyUrl;
+    var localMode = !!ACADEMY;
     if (!P) { $('pathBody').innerHTML = '<div class="banner">curriculum.js did not load.</div>'; return; }
 
     var all = 0, done = 0, missing = [];
@@ -439,8 +466,9 @@
 
     var h = '<label>COMPANION STUDY PATH</label><h1>' + esc(P.name) + '</h1>' +
       '<p class="lead">' + esc(P.intro) + '</p>' +
-      '<p class="meta" style="margin:10px 0 20px">The academy: <a href="' + esc(P.academyUrl) +
-      '" target="_blank" rel="noopener">' + esc(P.academyUrl) + '</a></p>';
+      '<p class="meta" style="margin:10px 0 20px">The academy: <a href="' + esc(base) +
+      '"' + (localMode ? '' : ' target="_blank" rel="noopener"') + '>' +
+      esc(localMode ? 'served locally alongside this library' : P.academyUrl) + '</a></p>';
 
     if (missing.length) {
       h += '<div class="banner"><b>' + missing.length + ' mapped file' + (missing.length > 1 ? 's have' : ' has') +
@@ -464,8 +492,9 @@
         Math.round(words / 250) + ' min</span></div>' +
         (st.priority ? '<div class="stageFlag good">Highest value in the path</div>' : '') +
         (st.sparse ? '<div class="stageFlag warn">Thin external coverage — the academy carries this one</div>' : '') +
-        '<a class="stageLink" href="' + esc(P.academyUrl) + esc(st.academyHash) +
-        '" target="_blank" rel="noopener">Read academy module ' + st.n + ' first →</a>' +
+        '<a class="stageLink" href="' + esc(base) + esc(st.academyHash) + '"' +
+        (localMode ? '' : ' target="_blank" rel="noopener"') +
+        '>Read academy module ' + st.n + ' first →</a>' +
         items.map(function (it) {
           var i = byPath[it.p];
           return '<div class="pathItem" data-path="' + esc(it.p) + '">' +
