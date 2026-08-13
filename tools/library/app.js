@@ -8,8 +8,49 @@
 (function () {
   'use strict';
 
-  var L = window.LIBRARY;
   var $ = function (id) { return document.getElementById(id); };
+
+  /* The index is generated locally and deliberately not committed, so this
+     page is reachable — on GitHub Pages, or opened straight from a clone —
+     with nothing to read. Explain that instead of throwing. */
+  if (!window.LIBRARY) {
+    document.addEventListener('DOMContentLoaded', showSetup);
+    if (document.readyState !== 'loading') showSetup();
+    return;
+  }
+  function showSetup() {
+    var d = $('drawer'); if (d) d.remove();
+    var s = $('scrim'); if (s) s.remove();
+    var t = $('offlineTag'); if (t) t.textContent = 'not set up';
+    document.body.style.paddingLeft = '0';
+    var bar = document.querySelector('.topbar'); if (bar) bar.style.paddingLeft = '16px';
+    ['page-course', 'page-item', 'page-path'].forEach(function (p) {
+      var e = $(p); if (e) e.remove();
+    });
+    $('page-home').innerHTML =
+      '<div class="hero"><label>LOCAL COURSE LIBRARY</label>' +
+      '<h1>This tool runs on your machine, not here.</h1>' +
+      '<p>It reads course repositories from your own disk, so there is nothing for it ' +
+      'to show on a hosted page. The index it needs is generated locally and is not ' +
+      'committed to the repository.</p></div>' +
+      '<div class="banner" style="border-left-color:var(--acc);background:color-mix(in srgb,var(--acc) 10%,var(--panel));border-color:color-mix(in srgb,var(--acc) 35%,var(--line))">' +
+      '<b>Two commands to run it for real:</b></div>' +
+      '<pre style="background:var(--bg2);border:1px solid var(--line);border-radius:10px;' +
+      'padding:16px;overflow-x:auto;font-family:var(--mono);font-size:13px;line-height:1.7">' +
+      'git clone https://github.com/harshadmehmood/ai-engineering-academy.git\n' +
+      'cd ai-engineering-academy/tools\n\n' +
+      './setup.sh   <span style="color:var(--ink3)"># clones three courses, builds the index</span>\n' +
+      './start.sh   <span style="color:var(--ink3)"># serves locally and opens this page, working</span></pre>' +
+      '<p class="lead" style="margin-top:18px">You then get roughly 280 files, 170 written lessons and 81 ' +
+      'notebooks in one searchable tree, plus a seven-stage study path mapping them onto ' +
+      'the academy&rsquo;s modules — all offline.</p>' +
+      '<p style="margin-top:22px"><a class="pathLink" style="display:inline-block;margin:0" ' +
+      'href="https://harshadmehmood.github.io/ai-engineering-academy/">← Back to the academy</a> ' +
+      '<a class="pathLink" style="display:inline-block;margin:0 0 0 8px" ' +
+      'href="https://github.com/harshadmehmood/ai-engineering-academy/tree/main/tools">Setup guide on GitHub</a></p>';
+  }
+
+  var L = window.LIBRARY;
   var $$ = function (s) { return Array.prototype.slice.call(document.querySelectorAll(s)); };
   function esc(s) {
     return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
