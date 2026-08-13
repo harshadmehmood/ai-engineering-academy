@@ -16,8 +16,15 @@
 const fs = require('fs');
 const path = require('path');
 
-const ROOT = __dirname;
-const OUT = path.join(ROOT, 'library', 'index-data.js');
+// Resolve the library root explicitly rather than from __dirname: this file is
+// often reached through a symlink, and Node resolves __dirname to the real path,
+// which would point the scanner at the repo instead of your course folder.
+const ROOT = process.env.LIBRARY_ROOT
+  ? path.resolve(process.env.LIBRARY_ROOT)
+  : process.cwd();
+// Generated output lives beside the courses, never inside the (possibly shared)
+// reader directory.
+const OUT = path.join(ROOT, 'library-index.js');
 
 /* ---- courses to scan. Add a row to index another repo. ---- */
 const COURSES = [
@@ -222,11 +229,10 @@ const payload = {
   totals,
 };
 
-fs.mkdirSync(path.join(ROOT, 'library'), { recursive: true });
 fs.writeFileSync(OUT, 'window.LIBRARY = ' + JSON.stringify(payload, null, 1) + ';\n');
 
 console.log('');
 console.log(`  ${totals.files} files · ${totals.lessons} lessons · ${totals.notebooks} notebooks`);
 console.log(`  ${totals.words.toLocaleString()} words indexed`);
 console.log(`  ${cache.length} cached datasets`);
-console.log(`  → library/index-data.js (${(fs.statSync(OUT).size / 1024).toFixed(0)} KB)`);
+console.log(`  → ${path.relative(process.cwd(), OUT) || OUT} (${(fs.statSync(OUT).size / 1024).toFixed(0)} KB)`);

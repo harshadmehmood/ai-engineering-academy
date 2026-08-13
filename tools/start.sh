@@ -10,14 +10,17 @@
 #   ./start.sh 9000     # use a different port
 # ============================================================
 set -uo pipefail
+# Use the symlink's own location, not its resolved target: the course repos
+# live beside the link, while the tool itself may live in another checkout.
 cd "$(dirname "${BASH_SOURCE[0]}")"
+export LIBRARY_ROOT="$(pwd)"
 
 PORT="${1:-8777}"
 
 # Rebuild the index if any course has newer files than the index.
 if command -v node >/dev/null 2>&1; then
-  if [ ! -f library/index-data.js ] || \
-     [ -n "$(find . -maxdepth 2 -name '*.md' -newer library/index-data.js -not -path './library/*' -print -quit 2>/dev/null)" ]; then
+  if [ ! -f library-index.js ] || \
+     [ -n "$(find . -maxdepth 2 -name '*.md' -newer library-index.js -not -path './library/*' -print -quit 2>/dev/null)" ]; then
     echo "Rebuilding index…"
     node build-index.js
     echo ""

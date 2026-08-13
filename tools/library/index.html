@@ -20,6 +20,7 @@
 
 <aside id="drawer">
   <div class="drawerHead"><b>Library</b><button id="drawerClose" class="icon">×</button></div>
+  <a class="pathLink" href="#path">◆ Companion study path</a>
   <div class="filterBar">
     <button class="chip active" data-nf="all">All</button>
     <button class="chip" data-nf="lesson">Lessons</button>
@@ -47,6 +48,8 @@
 
     <div class="banner" id="serveBanner"></div>
 
+    <div id="pathPromo"></div>
+
     <h2 class="sectionTitle">Courses</h2>
     <div id="courseGrid" class="courseGrid"></div>
 
@@ -60,6 +63,12 @@
 
     <h2 class="sectionTitle">Cached datasets</h2>
     <div id="cacheList"></div>
+  </section>
+
+  <!-- STUDY PATH -->
+  <section id="page-path" class="page hide">
+    <div class="readerTop"><button class="text" data-goto="#home">← Library</button><span id="pathMeta" class="meta"></span></div>
+    <div id="pathBody"></div>
   </section>
 
   <!-- COURSE -->
@@ -94,7 +103,8 @@
 
 <div id="toast" class="toast hide"></div>
 
-<script src="index-data.js"></script>
+<script src="../library-index.js"></script>
+<script src="../curriculum.js"></script>
 <script src="app.js"></script>
 </body>
 </html>

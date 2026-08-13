@@ -222,3 +222,41 @@ table.rt th{background:var(--panel2);font-size:11.5px;text-transform:uppercase;l
   h1{font-size:24px}
   main{padding:16px 14px 40px}
 }
+
+/* ---------- companion study path ---------- */
+.pathLink{display:block;margin:10px 12px 0;padding:9px 12px;border-radius:9px;
+  background:color-mix(in srgb,var(--acc) 14%,transparent);
+  border:1px solid color-mix(in srgb,var(--acc) 40%,transparent);
+  color:var(--ink);font-size:13px;font-weight:600;text-align:center}
+.pathLink:hover{text-decoration:none;background:color-mix(in srgb,var(--acc) 22%,transparent)}
+.pathBar{height:7px;border-radius:4px;background:var(--panel2);border:1px solid var(--line);
+  overflow:hidden;margin:0 0 24px}
+.pathBar>span{display:block;height:100%;background:linear-gradient(90deg,var(--acc),var(--acc2));transition:width .3s}
+.stage{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);
+  padding:16px;margin-bottom:14px}
+.stage.complete{border-color:color-mix(in srgb,var(--good) 45%,var(--line))}
+.stageHead{display:flex;gap:13px;align-items:flex-start;margin-bottom:10px}
+.stageN{flex:none;width:28px;height:28px;border-radius:50%;background:var(--panel2);
+  border:1px solid var(--line2);display:flex;align-items:center;justify-content:center;
+  font-family:var(--mono);font-size:12.5px;color:var(--acc);font-weight:700}
+.stage.complete .stageN{background:var(--acc);color:#04121b;border-color:var(--acc)}
+:root[data-theme="light"] .stage.complete .stageN{color:#fff}
+.stageT{flex:1;min-width:0}
+.stageT b{display:block;font-size:15.5px}
+.stageT small{display:block;color:var(--ink2);font-size:13.1px;margin-top:2px}
+.stageMeta{flex:none;font-family:var(--mono);font-size:11.5px;color:var(--ink3);white-space:nowrap}
+.stageFlag{font-size:12.3px;border-radius:7px;padding:6px 10px;margin:0 0 9px}
+.stageFlag.good{background:color-mix(in srgb,var(--good) 12%,transparent);
+  border:1px solid color-mix(in srgb,var(--good) 35%,transparent);color:var(--good)}
+.stageFlag.warn{background:color-mix(in srgb,var(--warn) 12%,transparent);
+  border:1px solid color-mix(in srgb,var(--warn) 35%,transparent);color:var(--warn)}
+.stageLink{display:inline-block;font-size:12.5px;margin:0 0 10px;font-family:var(--mono)}
+.pathItem{display:flex;align-items:center;gap:11px;padding:9px 12px;background:var(--panel2);
+  border:1px solid var(--line);border-radius:var(--r2);margin-bottom:6px;cursor:pointer;transition:.14s}
+.pathItem:hover{border-color:var(--acc);transform:translateX(3px)}
+.pathItem .ic{flex:none;width:18px;text-align:center;color:var(--ink3);font-size:11.5px}
+.pathItem .tx{flex:1;min-width:0}
+.pathItem .tx b{display:block;font-size:13.6px;font-weight:600}
+.pathItem .tx small{display:block;color:var(--ink3);font-size:12.4px}
+.pathItem .w{font-family:var(--mono);font-size:11px;color:var(--ink3);flex:none}
+.pathItem .tick{color:var(--good);flex:none}

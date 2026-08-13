@@ -235,6 +235,20 @@
       : '<b>Opened directly from disk.</b> Browsers block one local file from reading another, so lesson text will not load. Run <code>./start.sh</code> in the AI Videos folder instead — it serves this page locally and opens it for you. Still fully offline.';
     if (SERVED) $('serveBanner').classList.remove('banner');
 
+    $('pathPromo').innerHTML = (function () {
+      var P = window.STUDY_PATH; if (!P) return '';
+      var all = 0, done = 0;
+      P.stages.forEach(function (st) { st.items.forEach(function (it) {
+        if (byPath[it.p]) { all++; if (S.read[it.p]) done++; } }); });
+      return '<div class="stage" style="cursor:pointer" data-goto="#path">' +
+        '<div class="stageHead"><span class="stageN">◆</span><div class="stageT">' +
+        '<b>Companion study path</b><small>' + esc(P.intro.split('. ')[0]) + '.</small></div>' +
+        '<span class="stageMeta">' + done + '/' + all + '</span></div>' +
+        '<div class="pathBar" style="margin:0"><span style="width:' +
+        (all ? (done / all) * 100 : 0) + '%"></span></div></div>';
+    })();
+    $$('#pathPromo [data-goto]').forEach(function (e) { e.onclick = function () { go('#path'); }; });
+
     $('courseGrid').innerHTML = L.courses.map(function (c) {
       return '<div class="courseCard" data-course="' + c.id + '">' +
         '<div class="org">' + esc(c.org) + '</div><h3>' + esc(c.name) + '</h3>' +
@@ -367,6 +381,70 @@
     if (open && open.closest('details')) open.closest('details').open = true;
   }
 
+
+  /* ---- companion study path ---- */
+  function renderPath() {
+    var P = window.STUDY_PATH;
+    if (!P) { $('pathBody').innerHTML = '<div class="banner">curriculum.js did not load.</div>'; return; }
+
+    var all = 0, done = 0, missing = [];
+    P.stages.forEach(function (st) {
+      st.items.forEach(function (it) {
+        if (!byPath[it.p]) { missing.push(it.p); return; }
+        all++; if (S.read[it.p]) done++;
+      });
+    });
+    $('pathMeta').textContent = done + ' of ' + all + ' completed';
+
+    var h = '<label>COMPANION STUDY PATH</label><h1>' + esc(P.name) + '</h1>' +
+      '<p class="lead">' + esc(P.intro) + '</p>' +
+      '<p class="meta" style="margin:10px 0 20px">The academy: <a href="' + esc(P.academyUrl) +
+      '" target="_blank" rel="noopener">' + esc(P.academyUrl) + '</a></p>';
+
+    if (missing.length) {
+      h += '<div class="banner"><b>' + missing.length + ' mapped file' + (missing.length > 1 ? 's have' : ' has') +
+        ' moved</b> since the path was written — these repos restructure. Missing: ' +
+        missing.map(function (m) { return '<code>' + esc(m) + '</code>'; }).join(', ') +
+        '. Everything else still works.</div>';
+    }
+
+    h += '<div class="pathBar"><span style="width:' + (all ? (done / all) * 100 : 0) + '%"></span></div>';
+
+    P.stages.forEach(function (st) {
+      var items = st.items.filter(function (it) { return byPath[it.p]; });
+      var sDone = items.filter(function (it) { return S.read[it.p]; }).length;
+      var words = items.reduce(function (n, it) { return n + byPath[it.p].words; }, 0);
+      h += '<div class="stage' + (sDone === items.length && items.length ? ' complete' : '') + '">' +
+        '<div class="stageHead">' +
+        '<span class="stageN">' + st.n + '</span>' +
+        '<div class="stageT"><b>' + esc(st.academy) + '</b>' +
+        '<small>' + esc(st.goal) + '</small></div>' +
+        '<span class="stageMeta">' + sDone + '/' + items.length + ' · ' +
+        Math.round(words / 250) + ' min</span></div>' +
+        (st.priority ? '<div class="stageFlag good">Highest value in the path</div>' : '') +
+        (st.sparse ? '<div class="stageFlag warn">Thin external coverage — the academy carries this one</div>' : '') +
+        '<a class="stageLink" href="' + esc(P.academyUrl) + esc(st.academyHash) +
+        '" target="_blank" rel="noopener">Read academy module ' + st.n + ' first →</a>' +
+        items.map(function (it) {
+          var i = byPath[it.p];
+          return '<div class="pathItem" data-path="' + esc(it.p) + '">' +
+            '<span class="ic">' + icon(i) + '</span>' +
+            '<span class="tx"><b>' + esc(i.title) + '</b><small>' + esc(it.why) + '</small></span>' +
+            (i.needs && i.needs.length
+              ? '<span class="pill ' + (i.needs.indexOf('api') >= 0 ? 'bad' : 'warn') + '">' +
+                (NEEDS[i.needs[0]] ? NEEDS[i.needs[0]][0] : i.needs[0]) + '</span>' : '') +
+            '<span class="w">' + i.words + 'w</span>' +
+            (S.read[it.p] ? '<span class="tick">✓</span>' : '') + '</div>';
+        }).join('') + '</div>';
+    });
+
+    $('pathBody').innerHTML = h;
+    $$('#pathBody [data-path]').forEach(function (e) {
+      lastList = null;
+      e.onclick = function () { go('#item/' + e.dataset.path); };
+    });
+  }
+
   /* ---- palette ---- */
   var pRows = [], pSel = 0;
   function openPal() { $('palette').classList.remove('hide'); $('paletteInput').value = ''; $('paletteInput').focus(); search(''); }
@@ -397,7 +475,7 @@
 
   /* ---- router ---- */
   function show(p) {
-    ['home', 'course', 'item'].forEach(function (x) { $('page-' + x).classList.toggle('hide', x !== p); });
+    ['home', 'path', 'course', 'item'].forEach(function (x) { $('page-' + x).classList.toggle('hide', x !== p); });
     window.scrollTo(0, 0);
   }
   function route() {
@@ -405,7 +483,8 @@
     var slash = h.indexOf('/');
     var page = slash < 0 ? h : h.slice(0, slash);
     var arg = slash < 0 ? '' : h.slice(slash + 1);
-    if (page === 'course') { show('course'); renderCourse(arg); }
+    if (page === 'path') { show('path'); renderPath(); }
+    else if (page === 'course') { show('course'); renderCourse(arg); }
     else if (page === 'item') { show('item'); renderItem(arg); }
     else { show('home'); renderHome(); }
     if (window.innerWidth < 1180) { $('drawer').classList.remove('open'); $('scrim').classList.remove('on'); }

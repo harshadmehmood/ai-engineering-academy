@@ -9,20 +9,43 @@ It ships **no course content** — you clone the courses, it indexes them.
 
 ```bash
 cd tools
-
-# clone whichever courses you want (these three are a good start)
-git clone --depth 1 https://github.com/DataTalksClub/llm-zoomcamp.git
-git clone --depth 1 https://github.com/huggingface/agents-course.git
-git clone --depth 1 https://github.com/anthropics/courses.git anthropic-courses
-
-./start.sh
+./setup.sh      # clones the three courses, builds the index (~230 MB)
+./start.sh      # serves on localhost:8777 and opens the reader
 ```
 
-`start.sh` builds the index, serves this folder on `localhost:8777`, and opens the
-reader. Ctrl-C stops it. Use a different port with `./start.sh 9000`.
+`setup.sh` is idempotent — re-run it any time, or `./setup.sh --update` to pull each
+course first. `start.sh` rebuilds the index when course files change. Ctrl-C stops
+it; `./start.sh 9000` uses a different port.
 
 With those three cloned you get roughly **280 files, 170 written lessons, 81
 notebooks and 350,000 words** — searchable, cross-linked and fully offline.
+
+## The study path
+
+The library opens on a **companion study path**: seven stages, one per academy
+module, each mapping to specific external lessons and notebooks with a line on why
+that item is there. It turns a pile of cloned repos into an ordered module.
+
+| Stage | Academy module | External coverage |
+|---|---|---|
+| 1 | Foundations | Good — LLM framing, tokens, API parameters, embeddings |
+| 2 | Prompting as Engineering | **Strongest.** Runnable, graded prompt exercises |
+| 3 | Context Engineering | **Thin.** One direct lesson; the academy carries this |
+| 4 | Retrieval & Knowledge | Strong — full pipeline, hybrid search, reranking |
+| 5 | Tools & Agents | Strong — tool schemas from API and framework angles |
+| 6 | Evaluation & Observability | **Highest value.** Do this one properly |
+| 7 | Production System Design | Moderate — metrics, feedback, dashboards |
+
+Stages 3 and 6 are flagged in the UI for opposite reasons: stage 3 because external
+material barely covers it, stage 6 because it is the gap most working engineers
+actually have.
+
+Progress is per item and shared with the rest of the reader, so marking a lesson
+read anywhere advances the path. Mapped paths are validated against the built index
+at load time — if a course restructures and a file moves, the path says so rather
+than quietly dropping it.
+
+Edit `curriculum.js` to change the mapping.
 
 ## Why a local server
 
@@ -31,7 +54,7 @@ reader could not load a single lesson that way. `start.sh` runs
 `python3 -m http.server` bound to `127.0.0.1`. Nothing is exposed off the machine
 and no request leaves it.
 
-It also keeps licences clean. `library/index-data.js` — generated on your machine,
+It also keeps licences clean. `library-index.js` — generated on your machine,
 gitignored — holds only titles, paths, headings, word counts and an
 offline-readiness classification. The reader fetches each file from its own repo at
 view time, so `git pull` in a course folder updates the library and no third-party
@@ -97,11 +120,30 @@ Read state lives in the browser's `localStorage`. Nothing is uploaded.
 
 ```
 tools/
-  start.sh              build index, serve, open
-  build-index.js        scanner → library/index-data.js (gitignored)
+  setup.sh              clone the three courses, build the index
+  start.sh              build if stale, serve on localhost, open
+  build-index.js        scanner → library-index.js (gitignored)
+  curriculum.js         the study path: academy module → external items
   library/              the reader — index.html, styles.css, app.js
   <course-repo>/        your clones, never modified
 ```
+
+### Running it from somewhere else
+
+The tool resolves its root from `LIBRARY_ROOT`, falling back to the current
+directory — not from `__dirname`, which Node resolves through symlinks. So you can
+symlink `setup.sh`, `start.sh`, `build-index.js`, `curriculum.js` and `library/`
+into any folder, keep your course clones there, and still have one canonical copy
+of the tool:
+
+```bash
+ln -s /path/to/repo/tools/library      ~/courses/library
+ln -s /path/to/repo/tools/start.sh     ~/courses/start.sh
+# …and the rest
+cd ~/courses && ./start.sh
+```
+
+The generated index is written beside the courses, never into the repo.
 
 ## Licence
 
