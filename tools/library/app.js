@@ -446,6 +446,8 @@
   var ACADEMY = null;
   function findAcademy(done) {
     if (ACADEMY !== null) return done(ACADEMY);
+    // The script probes in index.html already answered this, on file:// too.
+    if (window.__ACADEMY) { ACADEMY = window.__ACADEMY; return done(ACADEMY); }
     if (location.protocol === 'file:') { ACADEMY = ''; return done(''); }
     var cands = ['../academy/', '../../', '../'];
     (function probe(i) {
