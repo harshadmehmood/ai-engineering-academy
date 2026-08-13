@@ -104,6 +104,9 @@
 <div id="toast" class="toast hide"></div>
 
 <script src="../library-index.js"></script>
+<!-- Bundled course text. Optional: without it the reader fetches from disk,
+     which needs a server. With it, file:// works too. -->
+<script src="../library-content.js" onerror="window.__noContent=1"></script>
 <script src="../curriculum.js"></script>
 <script src="app.js"></script>
 </body>

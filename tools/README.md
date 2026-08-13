@@ -47,7 +47,34 @@ than quietly dropping it.
 
 Edit `curriculum.js` to change the mapping.
 
-## Why a local server
+## Fully offline, no server
+
+`build-index.js` also writes `library-content.js` — every indexed file's text as
+JavaScript. A `file://` page cannot `fetch` a sibling file but it can load a
+script, so with the bundle present the reader works straight from disk:
+
+```
+open "<your courses folder>/library/index.html"
+```
+
+Notebook `attachments`, base64 images and rendered HTML are stripped. They are the
+difference between **3 MB and 63 MB**, and the reader truncates long output anyway.
+Open the `.ipynb` directly if you need a chart.
+
+Put the academy beside your courses and the two link to each other from disk too:
+
+```bash
+ln -s /path/to/repo "<your courses folder>/academy"
+open "<your courses folder>/academy/index.html"
+```
+
+The academy detects a built library with a `<script>` probe — the only detection
+that works from `file://` — and shows an **Open the library** button when it finds one.
+
+`start.sh` is still there and still useful: it serves both on one origin, and
+reads files live so edits show up without a rebuild.
+
+## Why the server is still an option
 
 Browsers block a page opened from `file://` from reading other local files, so the
 reader could not load a single lesson that way. `start.sh` runs

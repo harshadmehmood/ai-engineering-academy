@@ -190,7 +190,13 @@
 
   /* ---- fetch with a helpful failure ---- */
   var SERVED = location.protocol !== 'file:';
+  var BUNDLE = window.LIBRARY_CONTENT || null;
   function load(relPath) {
+    // Prefer the generated bundle: it is the only thing that works from file://,
+    // and over HTTP it saves a round trip.
+    if (BUNDLE && typeof BUNDLE[relPath] === 'string') {
+      return Promise.resolve(BUNDLE[relPath]);
+    }
     // Paths legitimately contain spaces ("Anthropic 1P/"), which a raw fetch
     // will not resolve. Encode each segment, not the separators.
     var url = '../' + relPath.split('/').map(encodeURIComponent).join('/');
@@ -274,7 +280,14 @@
       '<div><b>' + ITEMS.filter(function (i) { return i.offline; }).length + '</b><small>Run offline</small></div>' +
       '<div><b>' + readCount() + '</b><small>Read</small></div>';
 
-    $('serveBanner').innerHTML = SERVED
+    if (BUNDLE) {
+      $('serveBanner').className = 'banner';
+      $('serveBanner').style.borderLeftColor = 'var(--good)';
+      $('serveBanner').innerHTML = '<b>Reading from the offline bundle.</b> ' +
+        Object.keys(BUNDLE).length + ' files are embedded, so this works with no server ' +
+        'and no network — including straight from disk. Notebook images are omitted to ' +
+        'keep the bundle small; open the .ipynb itself if you need them.';
+    } else $('serveBanner').innerHTML = SERVED
       ? '<div class="banner" style="border-left-color:var(--good);background:color-mix(in srgb,var(--good) 10%,var(--panel));border-color:color-mix(in srgb,var(--good) 35%,var(--line))"><b>Served over HTTP.</b> Files load correctly. Everything here is local — no internet is used.</div>'
       : '<b>Opened directly from disk.</b> Browsers block one local file from reading another, so lesson text will not load. Run <code>./start.sh</code> in the AI Videos folder instead — it serves this page locally and opens it for you. Still fully offline.';
     if (SERVED) $('serveBanner').classList.remove('banner');

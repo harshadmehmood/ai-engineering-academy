@@ -743,10 +743,21 @@
   function probeLibrary() {
     var el = $('libStatus');
     if (!el) return;
+
+    /* The script-tag probe in index.html already told us: if a sibling library
+       has been built, its index defined window.LIBRARY. That works from file://
+       too, where fetch does not. */
+    if (global.LIBRARY && global.LIBRARY.totals) {
+      var t = global.LIBRARY.totals;
+      el.innerHTML = '<a class="primary tkBtn" href="../library/">Open the library →</a>' +
+        '<span class="meta" style="margin-left:12px">Built and ready — ' + t.files +
+        ' files, ' + t.lessons + ' lessons, ' + t.notebooks + ' notebooks.</span>';
+      return;
+    }
     if (location.protocol === 'file:') {
-      el.innerHTML = 'You are reading this from disk, so the library cannot be reached — ' +
-        'a <code>file://</code> page cannot load one served over HTTP. Run <code>./start.sh</code> ' +
-        'and open <code>localhost:8777/academy/</code> for a copy that links straight through.';
+      el.innerHTML = 'No library found beside this copy. If you have built one, open the ' +
+        'academy from inside your courses folder (<code>…/academy/index.html</code>) so the ' +
+        'two sit side by side — then everything works from disk, with no server.';
       return;
     }
     el.textContent = 'Checking for a library on this server…';

@@ -169,9 +169,17 @@ window.DIAGRAMS.keys().forEach((k) => {
 
 /* ---- every script in index.html exists and is listed ---- */
 const html = fs.readFileSync(path.join(ROOT, 'index.html'), 'utf8');
-const srcs = (html.match(/<script src="([^"]+)"/g) || []).map((s) => s.match(/"([^"]+)"/)[1]);
-srcs.forEach((s) => {
-  if (!fs.existsSync(path.join(ROOT, s))) fail(`index.html references missing file "${s}"`);
+/* A script carrying onerror is optional by design — the companion library's
+   generated files live outside the repo and are absent on a fresh clone. */
+const tags = html.match(/<script src="[^"]+"[^>]*>/g) || [];
+const srcs = [];
+tags.forEach((tag) => {
+  const src = tag.match(/src="([^"]+)"/)[1];
+  const optional = /onerror=/.test(tag);
+  if (!optional) srcs.push(src);
+  if (!optional && !fs.existsSync(path.join(ROOT, src))) {
+    fail(`index.html references missing file "${src}"`);
+  }
 });
 fs.readdirSync(path.join(ROOT, 'js')).filter((f) => f.endsWith('.js')).forEach((f) => {
   if (!srcs.includes('js/' + f)) warn(`js/${f} exists but is not loaded by index.html`);

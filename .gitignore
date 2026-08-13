@@ -9,3 +9,4 @@ node_modules/
 # generated locally by tools/build-index.js — depends on which courses you cloned
 # generated locally — depends on which courses you cloned
 tools/library-index.js
+tools/library-content.js
